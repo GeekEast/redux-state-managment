@@ -1,44 +1,148 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Prologue
+### Pure and Impure function
+- Pure function
+```javascript
+const add = (a, b) => {
+  return a + b;
+}
+```
+- Impure function 1
+```javascript
+const b 
+const add = (a) => {
+  return a + b;
+}
+```
+- Impure function 2
+```javascript
+const add =(a,b) => {
+  Api.post('/add', {a,b}, (response) => {
+    // do something which cause external changes.
+  })
+}
+```
+### Copy things immutably
+- copy object immutably
+```javascript
+const original = {a: 1, b: 2};
+const copy2 = {...original}
+```
+- copy array immutably
+```javascript
+const original = [1, 2, 3];
+const copy2 = [...original];
+```
 
-## Available Scripts
+### Important Functions
+- `compose`
+```javascript
+import { compose } from 'redux';
 
-In the project directory, you can run:
+const makeLouder = string => string.toUpperCase();
+// @ts-ignore
+const repeatThreeTimes = string => string.repeat(3);
+const embolden = string => string.bold();
 
-### `yarn start`
+const makeLouderAndRepeatThreeTimesAndEmbolden = compose(makeLouder, repeatThreeTimes, embolden);
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+const tag = document.createElement("span");
+const textNode = document.createTextNode(makeLouderAndRepeatThreeTimesAndEmbolden('b'));
+tag.append(textNode);
+document.getElementById("app")!.appendChild(tag);
+```
+- `store.subscribe`
+```javascript
+const store = createStore(rootReducer);
+const unsubscribe = store.subscribe(() => {
+  console.log(store.getState().a);
+});
+store.dispatch({ type: "ADD_ONE", payload: 1 });
+store.dispatch({ type: "ADD_ONE", payload: 1 });
+store.dispatch({ type: "ADD_ONE", payload: 1 });
+store.dispatch({ type: "ADD_ONE", payload: 1 });
+store.dispatch({ type: "ADD_ONE", payload: 1 });
+unsubscribe();
+```
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+## Normalized state
+- no nesting structure
+- no duplicate data
+- use `{}` as the state of world, use `unique id` to look up objects
 
-### `yarn test`
+### Lodash/fp
+- [Docs](https://gist.github.com/jfmengels/6b973b69c491375117dc#_setpath-value-object)
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Optimization
+### useSelector
+- [Docs](https://react-redux.js.org/next/api/hooks#useselector)
+- The component will re-render only if the the **computed result of selector** has changed. The change of state `doesn't necessaril`y cause specific component to re-render.
+- Default Equality Compare: `===`
+- `Change` default equality compare:
+```javascript
+ // other methods: lodash.isEqual(), immutable.js的equal
+ const lists = useSelector(listsSelector, shallowEqual);
+```
+- The changes of  **multiple** `useSelectors` in one component will only cause the component to render **once**.
+- 
+### Reselect
+- [Docs](https://react-redux.js.org/next/api/hooks#using-memoizing-selectors)
+- Reselect `won't stop` re-render. It just store and **re-use** the last render.
+#### Why we use reselect?
+- Memorize `complex computation` results
+- **De-normalize** the store state
+#### How to use memoized selectors?
+- Return type: **primitive** types
+  - useSelector use `===` to compare
+- Return type: **reference** types
+  - Please set the compare method as shallow compare at first
+#### Where should I declare memoized selectors?
+- You should always avoid `render level`
 
-### `yarn build`
+|    Level    |  Dependency   |     Location      | Memoized |
+| :---------: | :-----------: | :---------------: | :------: |
+| `Component` |     State     | Outside Component |  False   |
+| `Instance`  | State & Props | Inside Component  | **True** |
+|  `Render`   |     State     | Inside Component  |  False   |
+- Instance Example
+```javascript
+const makeNumOfTodosWithIsDoneSelector = () =>
+  createSelector(
+    state => state.todos,
+    (_, isDone) => isDone,
+    (todos, isDone) => todos.filter(todo => todo.isDone === isDone).length)
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+export const TodoCounterForIsDoneValue = ({ isDone }) => {
+  const selectNumOfTodosWithIsDone = useMemo(makeNumOfTodosWithIsDoneSelector,[])
+  const numOfTodosWithIsDoneValue = useSelector(state =>selectNumOfTodosWithIsDone(state, isDone))
+  return <div>{numOfTodosWithIsDoneValue}</div>
+}
+``` 
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+<div style="text-align:center; margin:auto"><img src="img/2020-02-11-18-55-04.png"></div>
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### memo
+- You should use `memo` on **any component** having a `parent component`
+- memo is used only for compare `props`, If `state` of `store` changes, the component will still **re-render**, 
+- Default Compare Method: **Shallow Comparison**
+- `Modify` Default Compare Method:
+```javascript
+import { memo } from 'react';
+const myComponent = (props) => {...}
+const areEqual = (prevProps, nextProps) => {...}
+export default memo(MyComponent, areEqual);
+```
+## summary
+- 不错的不可变工具库: `immer`
+- Memoized Func Sum
+| Memoized Func |      Location       |   Default Compare    | Configurable |
+| :-----------: | :-----------------: | :------------------: | :----------: |
+|  `useEffect`  |      **deps**       |        `===`         |    False     |
+| `useCallback` |      **deps**       |        `===`         |    False     |
+|   `useMemo`   |      **deps**       |        `===`         |    False     |
+|    `memo`     |   **props input**   | `shallow comparison` |     True     |
+| `useSelector` | **selector output** |        `===`         |   **True**   |
+|  `reselect`   | **selector input**  | `shallow comparison` |     True     |
 
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Reference
+- [React组件设计实践总结](https://bobi.ink/2019/05/10/react-component-design-01/)
+- [Mind Hacks](http://mindhacks.cn/)

@@ -145,5 +145,9 @@ export default memo(MyComponent, areEqual);
 |  `reselect`   | **selector input**  | `shallow comparison` |     True     |
 
 ## Reference
+- [Github/reselect](https://github.com/reduxjs/reselect#reselect)
+- [Redux Hooks](https://react-redux.js.org/next/api/hooks#hooks)
 - [React组件设计实践总结](https://bobi.ink/2019/05/10/react-component-design-01/)
+- [React Patterns](https://reactpatterns.cn/)
+- [React Bits](https://vasanthk.gitbooks.io/react-bits/)
 - [Mind Hacks](http://mindhacks.cn/)

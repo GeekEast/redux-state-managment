@@ -134,6 +134,7 @@ export default memo(MyComponent, areEqual);
 ## summary
 - 不错的不可变工具库: `immer`
 - Memoized Func Sum
+
 | Memoized Func |      Location       |   Default Compare    | Configurable |
 | :-----------: | :-----------------: | :------------------: | :----------: |
 |  `useEffect`  |      **deps**       |        `===`         |    False     |

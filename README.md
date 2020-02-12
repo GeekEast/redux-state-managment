@@ -65,6 +65,7 @@ unsubscribe();
 ```
 
 ## Normalized state
+- `normalizr`: `id` is a **must**; only define **relationships** to do normalization.
 - no nesting structure
 - no duplicate data
 - use `{}` as the state of world, use `unique id` to look up objects
@@ -131,7 +132,35 @@ const myComponent = (props) => {...}
 const areEqual = (prevProps, nextProps) => {...}
 export default memo(MyComponent, areEqual);
 ```
-## summary
+## Architecture
+### Short-term Plan
+- `Reduce same API Calls within a very short time`:
+  - **batch**: batch update the redux store.
+- `Reduce unnecessary computation and re-render`:
+  - **reselect**: cache `store -> dom`, `computation` level
+  - **memo**: cache `props -> dom`, `render` level
+  - **useMemo**: cache `state -> dom`, `computation` level
+### Long-term Plan
+
+#### Store
+- `normalized` data by [normalizr](https://github.com/paularmstrong/normalizr)
+#### Component Division
+- **Root** `Component`:
+  - Subscribe to `API` for any `resources` changes related to `current user`
+  - Receive && store `updated resources` **Ids** and **Types** related to `current user` in `localStorage`
+- **Parent** `Component`: 
+  - `useDispatch` to load **normalized** data directly and only **once**
+  - pass `IDs` to `child components` rather than any data
+  - Dispatch data `updated function` to `API` fired by **child components**.
+  - Receive data from `instant` update to `API` and update the store (`instant update - single user`)
+  - pass `update` function to `child components`
+- **Child** `Component`: 
+  - `useSelector` and `reselect` to compute data for render
+- **Every** `Component`:
+  - Listen to the **Updated Data** in `localStorage`
+  - Update happens when `re-render` or `refresh`. (`subscribe update - multiple users`)
+
+## Summary
 - 不错的不可变工具库: `immer`
 - Memoized Func Sum
 

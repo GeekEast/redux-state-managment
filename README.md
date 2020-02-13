@@ -88,6 +88,7 @@ unsubscribe();
 ### Reselect
 - [Docs](https://react-redux.js.org/next/api/hooks#using-memoizing-selectors)
 - Reselect `won't stop` re-render. It just store and **re-use** the last render.
+- **props is passed always in second function**
 #### Why we use reselect?
 - Memorize `complex computation` results
 - **De-normalize** the store state
@@ -171,7 +172,7 @@ export default memo(MyComponent, areEqual);
 |   `useMemo`   |      **deps**       |        `===`         |    False     |
 |    `memo`     |   **props input**   | `shallow comparison` |     True     |
 | `useSelector` | **selector output** |        `===`         |   **True**   |
-|  `reselect`   | **selector input**  | `shallow comparison` |     True     |
+|  `reselect`   | **selector input**  |        `===`         |     True     |
 
 ## Reference
 - [Github/reselect](https://github.com/reduxjs/reselect#reselect)

@@ -136,11 +136,23 @@ export default memo(MyComponent, areEqual);
 ## Architecture
 ### Short-term Plan
 - `Reduce same API Calls within a very short time`:
-  - **batch**: batch update the redux store.
+  - **debounce**： eliminate `duplicate` API calls within `a very short time`.
 - `Reduce unnecessary computation and re-render`:
-  - **reselect**: cache `store -> dom`, `computation` level
-  - **memo**: cache `props -> dom`, `render` level
-  - **useMemo**: cache `state -> dom`, `computation` level
+  - **batch**: `batch `update the redux store.
+  - **useSelector**： modify `===` to `shallow comparison`
+  - **reselect**: cache `app level`, `component level` and `instance level` **de-normalization** or **complex computation** process. (will still cause page to render)
+  - **memo**: cache `props -> dom` (will remove duplicate render based same props)
+  - **useMemo**: cache computation process based on `component's own state`.
+
+#### Progress
+
+|   Feature   | Project | Task  | Property | Template | Portfolio | Documents | Companies | Users |
+| :---------: | :-----: | :---: | :------: | :------: | :-------: | :-------: | :-------: | :---: |
+|    memo     |   ✔️    |   ❎   |    ❎     |    ❎     |     ❎     |     ❎     |     ❎     |   ❎   |
+|   memoAC    |   ✔️    |   ❎   |    ❎     |    ❎     |     ❎     |     ❎     |     ❎     |   ❎   |
+| useSelector |   ✔️    |   ❎   |    ❎     |    ❎     |     ❎     |     ❎     |     ❎     |   ❎   |
+|  reselect   |   ✔️    |   ❎   |    ❎     |    ❎     |     ❎     |     ❎     |     ❎     |   ❎   |
+|    batch    |   ✔️    |   ❎   |    ❎     |    ❎     |     ❎     |     ❎     |     ❎     |   ❎   |
 ### Long-term Plan
 
 #### Store
@@ -160,15 +172,7 @@ export default memo(MyComponent, areEqual);
 - **Every** `Component`:
   - Listen to the **Updated Data** in `localStorage`
   - Update happens when `re-render` or `refresh`. (`subscribe update - multiple users`)
-#### Progress
 
-|   Feature   | Project | Task  | Property | Template | Portfolio | Documents | Companies | Users |
-| :---------: | :-----: | :---: | :------: | :------: | :-------: | :-------: | :-------: | :---: |
-|    memo     |   ✔️    |   ❎   |    ❎     |    ❎     |     ❎     |     ❎     |     ❎     |   ❎   |
-|   memoAC    |   ✔️    |   ❎   |    ❎     |    ❎     |     ❎     |     ❎     |     ❎     |   ❎   |
-| useSelector |   ✔️    |   ❎   |    ❎     |    ❎     |     ❎     |     ❎     |     ❎     |   ❎   |
-|  reselect   |   ✔️    |   ❎   |    ❎     |    ❎     |     ❎     |     ❎     |     ❎     |   ❎   |
-|    batch    |   ✔️    |   ❎   |    ❎     |    ❎     |     ❎     |     ❎     |     ❎     |   ❎   |`
 
 ## Summary
 - 不错的不可变工具库: `immer`

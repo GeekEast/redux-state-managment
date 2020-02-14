@@ -168,7 +168,7 @@ export default memo(MyComponent, areEqual);
 |   memoAC    |   ✔️    |   ❎   |    ❎     |    ❎     |     ❎     |     ❎     |     ❎     |   ❎   |
 | useSelector |   ✔️    |   ❎   |    ❎     |    ❎     |     ❎     |     ❎     |     ❎     |   ❎   |
 |  reselect   |   ✔️    |   ❎   |    ❎     |    ❎     |     ❎     |     ❎     |     ❎     |   ❎   |
-|    batch    |   ✔️    |   ❎   |    ❎     |    ❎     |     ❎     |     ❎     |     ❎     |   ❎   |
+|    batch    |   ✔️    |   ❎   |    ❎     |    ❎     |     ❎     |     ❎     |     ❎     |   ❎   |`
 
 ## Summary
 - 不错的不可变工具库: `immer`

@@ -160,6 +160,15 @@ export default memo(MyComponent, areEqual);
 - **Every** `Component`:
   - Listen to the **Updated Data** in `localStorage`
   - Update happens when `re-render` or `refresh`. (`subscribe update - multiple users`)
+#### Progress
+
+|   Feature   | Project | Task  | Property | Template | Portfolio | Documents | Companies | Users |
+| :---------: | :-----: | :---: | :------: | :------: | :-------: | :-------: | :-------: | :---: |
+|    memo     |   ✔️    |   ❎   |    ❎     |    ❎     |     ❎     |     ❎     |     ❎     |   ❎   |
+|   memoAC    |   ✔️    |   ❎   |    ❎     |    ❎     |     ❎     |     ❎     |     ❎     |   ❎   |
+| useSelector |   ✔️    |   ❎   |    ❎     |    ❎     |     ❎     |     ❎     |     ❎     |   ❎   |
+|  reselect   |   ✔️    |   ❎   |    ❎     |    ❎     |     ❎     |     ❎     |     ❎     |   ❎   |
+|    batch    |   ✔️    |   ❎   |    ❎     |    ❎     |     ❎     |     ❎     |     ❎     |   ❎   |
 
 ## Summary
 - 不错的不可变工具库: `immer`

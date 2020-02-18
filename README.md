@@ -148,11 +148,11 @@ export default memo(MyComponent, areEqual);
 
 |   Feature   | Project | Task  | Property | Template | Portfolio | Documents | Companies | Users |
 | :---------: | :-----: | :---: | :------: | :------: | :-------: | :-------: | :-------: | :---: |
-|    memo     |   ✔️    |   ❎   |    ❎     |    ❎     |     ❎     |     ❎     |     ❎     |   ❎   |
-|   memoAC    |   ✔️    |   ❎   |    ❎     |    ❎     |     ❎     |     ❎     |     ❎     |   ❎   |
-| useSelector |   ✔️    |   ❎   |    ❎     |    ❎     |     ❎     |     ❎     |     ❎     |   ❎   |
-|  reselect   |   ✔️    |   ❎   |    ❎     |    ❎     |     ❎     |     ❎     |     ❎     |   ❎   |
-|    batch    |   ✔️    |   ❎   |    ❎     |    ❎     |     ❎     |     ❎     |     ❎     |   ❎   |
+|    memo     |   ✔️    |  ✔️   |    ❎     |    ❎     |     ❎     |     ❎     |     ❎     |   ❎   |
+|   memoAC    |   ✔️    |  ✔️   |    ✔️    |    ✔️    |    ✔️     |    ✔️     |    ✔️     |  ✔️   |
+| useSelector |   ✔️    |  ✔️   |    ❎     |    ❎     |     ❎     |     ❎     |     ❎     |   ❎   |
+|  reselect   |   ✔️    |  ✔️   |    ❎     |    ❎     |     ❎     |     ❎     |     ❎     |   ❎   |
+|    batch    |   ✔️    |  ✔️   |    ❎     |    ❎     |     ❎     |     ❎     |     ❎     |   ❎   |
 ### Long-term Plan
 
 #### Store

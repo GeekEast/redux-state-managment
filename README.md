@@ -166,62 +166,62 @@ export default memo(MyComponent, areEqual);
 - `不可变方式`更新数据: `ES6`, `lodash/fp`, `immer`, `immutable.js`
 #### 场景一： 多用户共享状态管理
 - 核心思想：
-  - 多用户更新通过订阅后端API和前端监听执行来实现
+  - 多用户更新通过**订阅**后端API和前端**监听**执行来实现
 - 实现关键:
   - 后端API的`pub/sub`功能, 依赖于`websocket`
-  - 前端订阅，将数据加入到一个Queue中，设置Event Loop将变化映射到Store
+  - 前端订阅，将数据加入到一个`Queue`中，设置`Event Loop`将变化`映射`到**Store**
 - 后端数据特征:
-  - 只跟当前用户有关的数据
-  - 只是由其他用户引起的数据变化
-  - 格式: 更新者Id, 更新时间, 资源类型，资源Id, 改动类型(增、删、改)
-  - 批量优化: 在`一定时间`内，对同一资源，只实现一次最近更新
+  - 只跟**当前用户**有关的数据
+  - 只是由**其他用户**引起的数据变化
+  - 格式: `更新者Id`, `更新时间`, `资源类型`，`资源Id`, `改动类型(增、删、改)`
+  - 批量优化: 在`一定时间`内，对同一资源，只实现`一次`**最近**更新
 - 其他:
-  - 获取类型和Id来寻找对应的Action Creator来`更新数据`(Getter)
-  - 调用Redux原生`batch()`来实现批量映射
+  - 获取`类型`和`Id`来寻找对应的`Action Creator`来`更新数据`(Getter)
+  - 调用Redux原生`batch()`来实现**批量映射**
 - 思考:
   - 批量优化中的`一定时间`设为多少为好?
-  - 格式中的增删改是否应该和Redux中的type保持一致?
+  - 格式中的`增删改`是否应该和`Redux`中的`Type`保持一致?
 
 #### 场景二：单用户状态管理
 - 核心思想:
-  - 只进行一次状态的初始化映射(API => Store)
-  - 通过增、删、改来更新状态
+  - 只进行**一次**状态的**初始化**映射(API => Store)
+  - 通过`增、删、改`来**更新**状态
 - 实现关键:
-  - 前端维护一个HashMap, key为初始化Type, value为次数
-  - 所有的状态的初始化操作，都要经过一个filter审核，避免多次初始化统一页面, 可封装为Hooks
+  - 前端维护一个`HashMap`, **key**为初始化`Type`, **value**为`次数`
+  - 所有状态的**初始化操作**，都要经过一个`filter`审核，**避免多次初始化统一页面**, 可封装为`Hooks`
 - 其他:
-  - 只有初始化Getter操作才经过filter, 更新无须经过filter
-  - 只有当前用户的触发的Getter才经过filter, 多用户订阅的Getter无须经过filter
+  - 只有**初始化**`Getter`操作才经过filter, **更新**无须经过filter
+  - 只有**当前用户**的触发的Getter才经过filter, **多用户订阅**的Getter无须经过filter
 - 思考:
-  - 同一tab的Link和Redirect会引起store的重载吗?
-  - 不同Chrome Tab间如何共享状态？
-  - 不同浏览器之间如何共享状态？
+  - 同一`Tab`的`Link`和`Redirect`会引起store**重载**吗?
+  - **不同Chrome Tab**间如何`共享状态`？
+  - **不同浏览器**之间如何`共享状态`？
 
 #### 场景三: 局部状态管理
 - 核心思想:
-  - 通过状态提升到父组件，给多个子组件实现状态共享
+  - 通过**状态提升**到`父`组件，给`多个子组件`实现状态共享
 - 实现关键:
-  - 涉及到store的时候，父组件将获取entities数据，维护排序后的ids，并且只传递给子组件资源id，而非资源本身
-  - 涉及到局部state的时候, 传递父组件中的state update方法到子组件中, 由子组件触发state更新操作
+  - 涉及到**store**的时候，父组件将获取entities数据，维护**排序**后的ids，并且只传递给子组件资源**id**，而非资源本身
+  - 涉及到局部**state**的时候, 传递父组件中的`state update`方法到子组件中, 由`子`组件触发state更新操作
 - 其他：
-  - 排序逻辑可以抽离为层，实现共享
+  - `排序逻辑`可以抽离为**层**，实现共享
 #### 场景四：状态 -> UI
 <div style="text-align:center; margin:auto"><img src="img/2020-02-20-15-19-26.png"></div>
 
-- 使用Container Component来接受组件所有外部状态: props, store, context
-- Presentational Component只维护组件自己的state状态
+- 使用**Container Component**来接受组件所有外部状态: `props`, `store`, `context`
+- **Presentational Component**只维护组件自己的`state`状态
 - 优化:
-  - props: 使用memo来进行记忆,
-  - store: 使用reselect来进行记忆优化
-  - Context: 在container component中控制是否传入context信息作为props来节约渲染
-  - state: 分场景使用单值state, 复合state, 设计到和props交互使用useReducer
+  - `props`: 使用`memo`来进行记忆,
+  - `store`: 使用`reselect`来进行记忆优化
+  - `Context`: 在**container component**中控制`是否传入context信息`作为**props**来节约渲染
+  - `state`: 分场景使用`单值state`, `复合state`, 涉及到和props交互时用`useReducer`
 - props的记忆问题：
-  - primitive type: default
-  - 只有一层的Object: shallow compare
-  - 很多层的Object: deep compare
+  - `primitive type`: **default**
+  - `只有一层的Object`: **shallow compare**
+  - `很多层的Object`: **deep compare**
 - 思考
-  - Container Pattern, HOC pattern和Render Props Pattern的应用场景?
-  - 对比方式比较: memo, selector, reselect
+  - `Container Pattern`, `HOC pattern`和`Render Props Pattern`的应用场景?
+  - **对比方式**比较: `memo`, `selector`, `reselect`
 - 记忆方法对比
 
 | Memoized Func |      Location       |   Default Compare    | Configurable |
@@ -234,11 +234,11 @@ export default memo(MyComponent, areEqual);
 |  `reselect`   | **selector input**  |        `===`         |     True     |
 
 #### 未来
-- NPM: globalize适配当地时间
-- 虚拟列表优化
-- PWA + Service Workers
-- Server Side Rendering
-- GraphQL的应用
+- NPM: `globalize`适配当地时间
+- `虚拟列表`优化
+- `PWA` + `Service Workers`
+- `Server Side Rendering`
+- `GraphQL`的应用
 
 ## Reference
 - [Github/reselect](https://github.com/reduxjs/reselect#reselect)

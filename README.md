@@ -248,3 +248,6 @@ export default memo(MyComponent, areEqual);
 - [React Bits](https://vasanthk.gitbooks.io/react-bits/)
 - [Mind Hacks](http://mindhacks.cn/)
 - [有赞技术](https://tech.youzan.com/tag/team-introduction/)
+
+
+<div style="text-align:center; margin:auto"><img src="img/2020-02-20-23-00-11.png"></div>

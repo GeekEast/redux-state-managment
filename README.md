@@ -68,6 +68,25 @@ export const users = {
 }
 ```
 
+### Dev Tool
+- Don't use `const composeEnhancers =
+  (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ &&
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({ trace: process.env.NODE_ENV === "development", traceLimit: 25 })) ||
+  compose;`
+- use `yarn add redux-devtools-extension`
+```javascript
+import { createStore, applyMiddleware } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
+ 
+const composeEnhancers = composeWithDevTools({
+  // Specify here name, actionsBlacklist, actionsCreators and other options
+});
+const store = createStore(reducer, composeEnhancers(
+  applyMiddleware(...middleware),
+  // other store enhancers if any
+));
+```
+
 ## Optimization
 ### [useSelector](https://react-redux.js.org/next/api/hooks#useselector)
 - The component will re-render only if the the **computed result of selector** has changed. 

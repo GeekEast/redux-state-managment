@@ -34,6 +34,7 @@ unsubscribe();
 - `normalizr`: 
   - `id` is a **must**; 
   - `only` need to define **relationships** in schema.
+- **Update**: you probably don't need `ids`.
 ```javascript
 import { normalize, schema } from "normalizr";
 import defaultState from "./default-state.json";
@@ -85,68 +86,6 @@ const store = createStore(reducer, composeEnhancers(
   applyMiddleware(...middleware),
   // other store enhancers if any
 ));
-```
-
-## Optimization
-### [useSelector](https://react-redux.js.org/next/api/hooks#useselector)
-- The component will re-render only if the the **computed result of selector** has changed. 
-- The change of state `doesn't necessarily`y cause specific component to re-render.
-- The changes of  **multiple** `useSelectors` in one component will only cause the component to render **once**.
-- Default Equality Compare: `===`, to Change:
-```javascript
- // other methods: lodash.isEqual(), immutable.js的equal
- const lists = useSelector(listsSelector, shallowEqual);
-```
-
-
-### [Reselect](https://react-redux.js.org/next/api/hooks#using-memoizing-selectors)
-- Reselect `won't stop` re-render. It just store and **re-use** the last render result.
-- `props` is passed always in **second** function
-#### Why we use reselect?
-- Memorize `complex computation` results
-- **De-normalize** the store state
-#### How to use memoized selectors?
-- Return type: **primitive** types
-  - useSelector use `===` to compare
-- Return type: **reference** types
-  - Please set the compare method as shallow compare at first
-#### Where should I declare memoized selectors?
-- You should always avoid `render level`
-
-|    Level    |  Dependency   |     Location      | Memoized |
-| :---------: | :-----------: | :---------------: | :------: |
-|    `App`    |     State     |   Separate File   |  False   |
-| `Component` |     State     | Outside Component |  False   |
-| `Instance`  | State & Props | Inside Component  | **True** |
-|  `Render`   |     State     | Inside Component  |  False   |
-
-<div style="text-align:center; margin:auto"><img src="img/2020-02-11-18-55-04.png"></div>
-
-- `Instance level` Example
-```javascript
-const makeNumOfTodosWithIsDoneSelector = () =>
-  createSelector(
-    state => state.todos,
-    (_, isDone) => isDone,
-    (todos, isDone) => todos.filter(todo => todo.isDone === isDone).length)
-
-export const TodoCounterForIsDoneValue = ({ isDone }) => {
-  const selectNumOfTodosWithIsDone = useMemo(makeNumOfTodosWithIsDoneSelector,[])
-  const numOfTodosWithIsDoneValue = useSelector(state =>selectNumOfTodosWithIsDone(state, isDone))
-  return <div>{numOfTodosWithIsDoneValue}</div>
-}
-``` 
-
-
-### memo
-- You should use `memo` on **any component** having a `parent component`
-- memo is used only for compare `props`, If `state` of `store` changes, the component will still **re-render**, 
-- Default Compare Method: **Shallow Comparison**, change:
-```javascript
-import { memo } from 'react';
-const myComponent = (props) => {...}
-const areEqual = (prevProps, nextProps) => {...}
-export default memo(MyComponent, areEqual);
 ```
 
 ## Reference

@@ -88,6 +88,10 @@ const store = createStore(reducer, composeEnhancers(
 ));
 ```
 
+## `Object.is` vs `shallowCompare`
+- **single** property -> `Object.is`
+- **multiple** properties -> `shallowCompare` 
+
 ## Reference
 - [Github/reselect](https://github.com/reduxjs/reselect#reselect)
 - [Redux Hooks](https://react-redux.js.org/next/api/hooks#hooks)
